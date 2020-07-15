@@ -1,0 +1,128 @@
+DROP USER montran CASCADE;
+ALTER USER SYSTEM IDENTIFIED BY Oracle2020;
+ALTER SESSION SET "_ORACLE_SCRIPT"=true;  
+CREATE USER montran IDENTIFIED BY montran;
+GRANT CONNECT,DBA TO montran;
+GRANT DBA TO montran;
+CREATE TABLE employee_master
+(
+	employee_id number(10),
+	first_name varchar2(30),
+	last_name varchar2(30),
+	salary number(10,2)
+);
+
+DESC employee_master;
+
+INSERT INTO employee_master VALUES(101,'Vivek','Gohil',10000000.00);
+
+SET LINESIZE 32000;
+SET PAGESIZE 50000;
+
+ALTER TABLE employee_master ADD (age number(2));
+ALTER TABLE employee_master MODIFY (age number(3));
+ALTER TABLE employee_master DROP column age;
+ALTER TABLE employee_master ADD (age number(2) , married varchar2(3));
+ALTER TABLE employee_master DROP (age,married);
+
+DROP TABLE employee_master;
+
+CREATE TABLE employee (
+	emp_code number (5) NOT NULL,
+	emp_name varchar2 (25) NOT NULL,
+	dept_code varchar2 (4) 
+);
+
+INSERT INTO employee
+VALUES (101,NULL,'D981');
+
+TRUNCATE TABLE employee;
+
+
+ALTER TABLE employee
+RENAME TO employee_master;
+
+
+DROP TABLE employee;
+
+create table employee (
+	emp_code number (5) CONSTRAINT employee_uq UNIQUE,
+	emp_name varchar2 (25) CONSTRAINT employee_null NOT NULL
+);
+
+INSERT INTO employee VALUES(101,'Vivek');
+INSERT INTO employee VALUES(101,'Sunny');
+
+
+DROP TABLE Persons;
+CREATE TABLE Persons (
+    ID number NOT NULL,
+    LastName varchar2(255) NOT NULL,
+    FirstName varchar2(255),
+    Age int CONSTRAINT employee_age_check CHECK (Age>=18)
+);
+
+INSERT INTO Persons VALUES(101,'Gohil','Vivek',12);
+
+ALTER TABLE Persons
+DROP CONSTRAINT employee_age_check;
+
+ALTER TABLE Persons
+ADD CONSTRAINT employee_age_check CHECK (Age>=18);
+
+CREATE TABLE Persons (
+    ID int NOT NULL PRIMARY KEY,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int
+);
+
+CREATE TABLE Persons (
+    ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT PK_Person PRIMARY KEY (ID,LastName)
+);
+
+ALTER TABLE Persons
+DROP PRIMARY KEY;
+
+ALTER TABLE Persons
+DROP CONSTRAINT PK_Person;
+
+ALTER TABLE Persons
+ADD PRIMARY KEY (ID);
+
+ALTER TABLE Persons
+ADD CONSTRAINT PK_Person PRIMARY KEY (ID,LastName);
+
+------------------------------------------------------------------
+CREATE TABLE Persons (
+    PersonID int NOT NULL PRIMARY KEY,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int
+);
+
+CREATE TABLE Orders (
+    OrderID int NOT NULL,
+    OrderNumber int NOT NULL,
+    PersonID int,
+    PRIMARY KEY (OrderID),
+    CONSTRAINT FK_PersonOrder FOREIGN KEY (PersonID) REFERENCES Persons(PersonID)
+);
+
+ALTER TABLE Orders
+DROP CONSTRAINT FK_PersonOrder;
+
+ALTER TABLE Orders
+ADD CONSTRAINT FK_PersonOrder
+FOREIGN KEY (PersonID) REFERENCES Persons(PersonID);
+
+
+
+
+
+
+
