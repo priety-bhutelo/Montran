@@ -1,8 +1,9 @@
 DROP USER montran CASCADE;
 ALTER USER SYSTEM IDENTIFIED BY Oracle2020;
+ALTER USER training IDENTIFIED BY training;
 ALTER SESSION SET "_ORACLE_SCRIPT"=true;  
-CREATE USER montran IDENTIFIED BY montran;
-GRANT CONNECT,DBA TO montran;
+CREATE USER training IDENTIFIED BY trining;
+GRANT CONNECT,DBA TO training;
 GRANT DBA TO montran;
 CREATE TABLE employee_master
 (
@@ -120,971 +121,335 @@ ALTER TABLE Orders
 ADD CONSTRAINT FK_PersonOrder
 FOREIGN KEY (PersonID) REFERENCES Persons(PersonID);
 
------------------------------------------------------------------------------------------------
-Microsoft Windows [Version 10.0.18362.900]
-(c) 2019 Microsoft Corporation. All rights reserved.
+--*******************************************************
+--Simple Data Retrieval using select clause
 
-C:\Users\BornToCode>sqlplus
+-- SELECT *
 
-SQL*Plus: Release 18.0.0.0.0 - Production on Thu Jul 16 09:46:42 2020
-Version 18.4.0.0.0
+SELECT * FROM emp;
 
-Copyright (c) 1982, 2018, Oracle.  All rights reserved.
+-- SELECT columnlist
 
-Enter user-name: montran
-Enter password:
-Last Successful login time: Wed Jul 15 2020 10:41:42 +05:30
+SELECT empno, ename
+FROM emp;
 
-Connected to:
-Oracle Database 18c Express Edition Release 18.0.0.0.0 - Production
-Version 18.4.0.0.0
+-DESC tablename
 
-SQL> DROP TABLE DEPT;
-DROP TABLE DEPT
-           *
-ERROR at line 1:
-ORA-02449: unique/primary keys in table referenced by foreign keys
+DESC emp;
 
+--The tab table
 
-SQL> CREATE TABLE DEPT
-  2         (DEPTNO NUMBER(2) CONSTRAINT PK_DEPT PRIMARY KEY,
-  3  DNAME VARCHAR2(14) ,
-  4  LOC VARCHAR2(13) ) ;
-CREATE TABLE DEPT
-             *
-ERROR at line 1:
-ORA-00955: name is already used by an existing object
+DESC tab;
 
+SELECT * FROM TAB;
 
-SQL> DROP TABLE EMP;
+-- The DISTINCT keyword
 
-Table dropped.
+SELECT DISTINCT deptno from emp;
 
-SQL> CREATE TABLE EMP
-  2         (EMPNO NUMBER(4) CONSTRAINT PK_EMP PRIMARY KEY,
-  3  ENAME VARCHAR2(10),
-  4  JOB VARCHAR2(9),
-  5  MGR NUMBER(4),
-  6  HIREDATE DATE,
-  7  SAL NUMBER(7,2),
-  8  COMM NUMBER(7,2),
-  9  DEPTNO NUMBER(2) CONSTRAINT FK_DEPTNO REFERENCES DEPT);
+--*******************************************************
+--Conditional retrieval using where clause
 
-Table created.
+--Relational operator =, >, >= 
 
-SQL> INSERT INTO DEPT VALUES
-  2  (10,'ACCOUNTING','NEW YORK');
-INSERT INTO DEPT VALUES
-*
-ERROR at line 1:
-ORA-00001: unique constraint (MONTRAN.PK_DEPT) violated
+SELECT ename,job,sal
+FROM  emp
+where ename='ALLEN';
 
+SELECT ename,job,sal
+FROM emp
+WHERE sal>1600;
 
-SQL> INSERT INTO DEPT VALUES (20,'RESEARCH','DALLAS');
-INSERT INTO DEPT VALUES (20,'RESEARCH','DALLAS')
-*
-ERROR at line 1:
-ORA-00001: unique constraint (MONTRAN.PK_DEPT) violated
+SELECT ename,job,sal,comm
+FROM emp
+WHERE sal>=1600;
 
+--Logical operators (AND, OR, NOT)
 
-SQL> INSERT INTO DEPT VALUES
-  2  (30,'SALES','CHICAGO');
-INSERT INTO DEPT VALUES
-*
-ERROR at line 1:
-ORA-00001: unique constraint (MONTRAN.PK_DEPT) violated
+SELECT * 
+FROM emp
+WHERE job='CLERK'
+AND 
+SAL=800;
 
+SELECT * 
+FROM emp
+WHERE job='CLERK'
+OR
+SAL=800;
 
-SQL> INSERT INTO DEPT VALUES
-  2  (40,'OPERATIONS','BOSTON');
-INSERT INTO DEPT VALUES
-*
-ERROR at line 1:
-ORA-00001: unique constraint (MONTRAN.PK_DEPT) violated
+SELECT *
+FROM emp
+WHERE comm IS NOT NULL;
 
+--Special operators (BETWEEN, IN, LIKE, IS NULL)
 
-SQL> INSERT INTO EMP VALUES
-  2  (7369,'SMITH','CLERK',7902,to_date('17-12-1980','dd-mm-yyyy'),800,NULL,20);
+--FIND ALL THE SALARY WITHIN 840 AND 2000
 
-1 row created.
+SELECT ename, sal
+FROM emp
+WHERE sal BETWEEN 800 AND 2000;
 
-SQL> INSERT INTO EMP VALUES
-  2  (7499,'ALLEN','SALESMAN',7698,to_date('20-2-1981','dd-mm-yyyy'),1600,300,30);
+SELECT ename, sal
+FROM emp
+WHERE job IN ('CLERK','SALESMAN');
 
-1 row created.
+SELECT ename
+FROM emp
+WHERE ename LIKE 'A%';
 
-SQL> INSERT INTO EMP VALUES
-  2  (7521,'WARD','SALESMAN',7698,to_date('22-2-1981','dd-mm-yyyy'),1250,500,30);
+SELECT ename, sal, comm
+FROM emp
+WHERE comm IS NULL;
 
-1 row created.
+--*******************************************************
+--Ordering the output with ORDER BY clause
 
-SQL> INSERT INTO EMP VALUES
-  2  (7566,'JONES','MANAGER',7839,to_date('2-4-1981','dd-mm-yyyy'),2975,NULL,20);
+--Ordering on a Single Column
 
-1 row created.
+SELECT ename, job, sal
+FROM emp
+ORDER BY sal;
 
-SQL> INSERT INTO EMP VALUES
-  2  (7654,'MARTIN','SALESMAN',7698,to_date('28-9-1981','dd-mm-yyyy'),1250,1400,30);
+--Ordering in descending order (DESC clause)
 
-1 row created.
+SELECT ename, job, sal
+FROM emp
+ORDER BY sal DESC;
 
-SQL> INSERT INTO EMP VALUES
-  2  (7698,'BLAKE','MANAGER',7839,to_date('1-5-1981','dd-mm-yyyy'),2850,NULL,30);
+--Ordering on multiple columns
 
-1 row created.
+SELECT ename, job, sal
+FROM emp
+ORDER BY job, sal;
 
-SQL> INSERT INTO EMP VALUES
-  2  (7782,'CLARK','MANAGER',7839,to_date('9-6-1981','dd-mm-yyyy'),2450,NULL,10);
+---------------------------------------------------------------------
+Date Functions
+ 
+SELECT SYSDATE AS CURRENT_DATE_TIME, EXTRACT(Year FROM SYSDATE) AS ONLY_CURRENT_YEAR 
+FROM Dual; 
 
-1 row created.
+SELECT SYSDATE AS CURRENT_DATE_TIME, EXTRACT(Month FROM SYSDATE) AS ONLY_CURRENT_MONTH 
+FROM Dual; 
 
-SQL> INSERT INTO EMP VALUES
-  2  (7788,'SCOTT','ANALYST',7566,to_date('13-JUL-87')-85,3000,NULL,20);
+SELECT SYSDATE AS CURRENT_DATE_TIME, EXTRACT(Day FROM SYSDATE) AS ONLY_CURRENT_DAY 
+FROM Dual; 
 
-1 row created.
+SELECT ADD_MONTHS(SYSDATE, -1)  AS PREV_MONTH, SYSDATE AS CURRENT_DATE,  
+                                 ADD_MONTHS(SYSDATE, 1) as NEXT_MONTH 
+FROM Dual;
 
-SQL> INSERT INTO EMP VALUES
-  2  (7839,'KING','PRESIDENT',NULL,to_date('17-11-1981','dd-mm-yyyy'),5000,NULL,10);
+SELECT SYSDATE AS CURRENT_DATE, LAST_DAY(SYSDATE) AS LAST_DAY_OF_MONTH,  
+                                LAST_DAY(SYSDATE)+1 AS FIRST_DAY_OF_NEXT_MONTH FROM Dual ; 
 
-1 row created.
+SELECT SYSDATE AS CURRENT_DATE, LAST_DAY(SYSDATE) - SYSDATE AS DAYS_LEFT_IN_MONTH 
+FROM Dual ;
 
-SQL> INSERT INTO EMP VALUES
-  2  (7844,'TURNER','SALESMAN',7698,to_date('8-9-1981','dd-mm-yyyy'),1500,0,30);
 
-1 row created.
+SELECT MONTHS_BETWEEN (TO_DATE ('01-07-2003', 'dd-mm-yyyy'), 
+					TO_DATE ('14-03-2003', 'dd-mm-yyyy')) AS NUMBER_OF_MONTHS 
+FROM Dual 
 
-SQL> INSERT INTO EMP VALUES
-  2  (7876,'ADAMS','CLERK',7788,to_date('13-JUL-87')-51,1100,NULL,20);
 
-1 row created.
+SELECT NEXT_DAY(SYSDATE, 'SUNDAY') AS NEXT_SUNDAY 
+FROM Dual 
+---------------------------------------------------------------------
+Nested Query 
 
-SQL> INSERT INTO EMP VALUES
-  2  (7900,'JAMES','CLERK',7698,to_date('3-12-1981','dd-mm-yyyy'),950,NULL,30);
+SELECT eName FROM Emp 
+WHERE sal >(
+	SELECT min(sal)FROM Emp WHERE deptno = (SELECT deptno FROM dept WHERE loc = 'NEW YORK')
+);
 
-1 row created.
+---------------------------------------------------------------------
+CREATE SEQUENCE item_seq;
 
-SQL> INSERT INTO EMP VALUES
-  2  (7902,'FORD','ANALYST',7566,to_date('3-12-1981','dd-mm-yyyy'),3000,NULL,20);
+SELECT item_seq.NEXTVAL
+FROM dual;
 
-1 row created.
+SELECT item_seq.CURRVAL
+FROM dual;
 
-SQL> INSERT INTO EMP VALUES
-  2  (7934,'MILLER','CLERK',7782,to_date('23-1-1982','dd-mm-yyyy'),1300,NULL,10);
+CREATE TABLE items(
+    item_id NUMBER
+);
+
+INSERT INTO items(item_id) VALUES(item_seq.NEXTVAL);
+INSERT INTO items(item_id) VALUES(item_seq.NEXTVAL);
+
+COMMIT;
+
+SELECT item_id FROM items;
+
+ALTER SEQUENCE item_seq MAXVALUE 100;
+
+DROP SEQUENCE item_seq;
+
+-----------------------------------------------------------------------
+Joins
+CREATE TABLE palette_a (
+    id INT PRIMARY KEY,
+    color VARCHAR2 (100) NOT NULL
+);
 
-1 row created.
+CREATE TABLE palette_b (
+    id INT PRIMARY KEY,
+    color VARCHAR2 (100) NOT NULL
+);
 
-SQL> DROP TABLE BONUS;
+INSERT INTO palette_a (id, color)
+VALUES (1, 'Red');
 
-Table dropped.
+INSERT INTO palette_a (id, color)
+VALUES (2, 'Green');
 
-SQL> CREATE TABLE BONUS
-  2  (
-  3  ENAME VARCHAR2(10),
-  4  JOB VARCHAR2(9)  ,
-  5  SAL NUMBER,
-  6  COMM NUMBER
-  7  ) ;
+INSERT INTO palette_a (id, color)
+VALUES (3, 'Blue');
 
-Table created.
+INSERT INTO palette_a (id, color)
+VALUES (4, 'Purple');
 
-SQL> DROP TABLE SALGRADE;
+-- insert data for the palette_b
+INSERT INTO palette_b (id, color)
+VALUES (1, 'Green');
 
-Table dropped.
+INSERT INTO palette_b (id, color)
+VALUES (2, 'Red');
+
+INSERT INTO palette_b (id, color)
+VALUES (3, 'Cyan');
+
+INSERT INTO palette_b (id, color)
+VALUES (4, 'Brown');
+
+
+Oracle inner join
+SELECT
+    a.id id_a,
+    a.color color_a,
+    b.id id_b,
+    b.color color_b
+FROM
+    palette_a a
+INNER JOIN palette_b b ON a.color = b.color;
+
+Oracle left join
+SELECT
+    a.id id_a,
+    a.color color_a,
+    b.id id_b,
+    b.color color_b
+FROM
+    palette_a a
+LEFT JOIN palette_b b ON a.color = b.color;
 
-SQL> CREATE TABLE SALGRADE
-  2        ( GRADE NUMBER,
-  3  LOSAL NUMBER,
-  4  HISAL NUMBER );
-
-Table created.
-
-SQL> INSERT INTO SALGRADE VALUES (1,700,1200);
-
-1 row created.
-
-SQL> INSERT INTO SALGRADE VALUES (2,1201,1400);
-
-1 row created.
-
-SQL> INSERT INTO SALGRADE VALUES (3,1401,2000);
-
-1 row created.
-
-SQL> INSERT INTO SALGRADE VALUES (4,2001,3000);
-
-1 row created.
-
-SQL> INSERT INTO SALGRADE VALUES (5,3001,9999);
-
-1 row created.
-
-SQL> COMMIT;
-
-Commit complete.
-
-SQL> DESC EMP;
- Name                                      Null?    Type
- ----------------------------------------- -------- ----------------------------
- EMPNO                                     NOT NULL NUMBER(4)
- ENAME                                              VARCHAR2(10)
- JOB                                                VARCHAR2(9)
- MGR                                                NUMBER(4)
- HIREDATE                                           DATE
- SAL                                                NUMBER(7,2)
- COMM                                               NUMBER(7,2)
- DEPTNO                                             NUMBER(2)
-
-SQL> DESC DEPT;
- Name                                      Null?    Type
- ----------------------------------------- -------- ----------------------------
- DEPTNO                                    NOT NULL NUMBER(2)
- DNAME                                              VARCHAR2(14)
- LOC                                                VARCHAR2(13)
-
-SQL> SELECT * FROM EMP;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
----------- ---------- --------- ---------- --------- ---------- ----------
-    DEPTNO
-----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800
-        20
-
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300
-        30
-
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500
-        30
-
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
----------- ---------- --------- ---------- --------- ---------- ----------
-    DEPTNO
-----------
-      7566 JONES      MANAGER         7839 02-APR-81       2975
-        20
-
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400
-        30
-
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850
-        30
-
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
----------- ---------- --------- ---------- --------- ---------- ----------
-    DEPTNO
-----------
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450
-        10
-
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000
-        20
-
-      7839 KING       PRESIDENT            17-NOV-81       5000
-        10
-
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
----------- ---------- --------- ---------- --------- ---------- ----------
-    DEPTNO
-----------
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0
-        30
-
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100
-        20
-
-      7900 JAMES      CLERK           7698 03-DEC-81        950
-        30
-
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM
----------- ---------- --------- ---------- --------- ---------- ----------
-    DEPTNO
-----------
-      7902 FORD       ANALYST         7566 03-DEC-81       3000
-        20
-
-      7934 MILLER     CLERK           7782 23-JAN-82       1300
-        10
-
-
-14 rows selected.
-
-SQL> SET LINESIZE 1000;
-SQL> SELECT * FROM EMP;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-14 rows selected.
-
-SQL> SET PAGESIZE 1000;
-SQL> SELECT * FROM EMP;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP WHERE EMPNO = 7839;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-
-SQL> SELECT ENAME,SAL FROM EMP WHERE EMPNO = 7839;
-
-ENAME             SAL
----------- ----------
-KING             5000
-
-SQL> SELECT * FROM EMP WHERE SAL >=3000;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-
-SQL> SELECT * FROM EMP;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-14 rows selected.
-
-SQL> SELECT ENAME,JOB,SAL WHERE ENAME= 'ALLEN';
-SELECT ENAME,JOB,SAL WHERE ENAME= 'ALLEN'
-                     *
-ERROR at line 1:
-ORA-00923: FROM keyword not found where expected
-
-
-SQL> SELECT ENAME,JOB,SAL FROM EMP WHERE ENAME= 'ALLEN';
-
-ENAME      JOB              SAL
----------- --------- ----------
-ALLEN      SALESMAN        1600
-
-SQL> SELECT * FROM EMP WHERE JOB='CLERK' AND SAL=800;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-
-SQL> SELECT * FROM EMP WHERE JOB='CLERK' OR SAL>800;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP WHERE COMM IS NULL OR COMM=0;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-11 rows selected.
-
-SQL> SELECT * FROM EMP WHERE COMM IS NOT NULL;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-
-SQL> SELECT ENAME , SAL FROM EMP WHERE SAL BETWEEN 800 AND 2000;
-
-ENAME             SAL
----------- ----------
-SMITH             800
-ALLEN            1600
-WARD             1250
-MARTIN           1250
-TURNER           1500
-ADAMS            1100
-JAMES             950
-MILLER           1300
-
-8 rows selected.
-
-SQL> SELECT ENAME FROM EMP WHERE ENAME LIKE 'A%';
-
-ENAME
-----------
-ALLEN
-ADAMS
-
-SQL> SELECT * FROM EMP;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP WHERE JOB = 'CLERK' OR JOB = 'SALESMAN';
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-8 rows selected.
-
-SQL> SELECT * FROM EMP WHERE JOB IN ('CLERK','SALESMAN');
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-8 rows selected.
-
-SQL> SELECT * FROM EMP;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP ORDER BY SAL;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP ORDER BY SAL DESC;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP ORDER BY SAL;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP ORDER BY SAL ,JOB;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP ORDER BY JOB , SAL;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP ORDER BY JOB , ENAME;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-
-14 rows selected.
-
-SQL> SELECT * FROM EMP;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-14 rows selected.
-
-SQL> SELECT SUM(SAL) FROM EMP WHERE JOB = 'CLERK';
-
-  SUM(SAL)
-----------
-      4150
-
-SQL> SELECT SUM(SAL) AS SALARY  FROM EMP WHERE JOB = 'CLERK';
-
-    SALARY
-----------
-      4150
-
-SQL> SELECT SUM(SAL) SALARY  FROM EMP WHERE JOB = 'CLERK';
-
-    SALARY
-----------
-      4150
-
-SQL> SELECT SUM(SAL) 'SALARY'  FROM EMP WHERE JOB = 'CLERK';
-SELECT SUM(SAL) 'SALARY'  FROM EMP WHERE JOB = 'CLERK'
-                *
-ERROR at line 1:
-ORA-00923: FROM keyword not found where expected
-
-
-SQL> SELECT SUM(SAL) SALARY  FROM EMP WHERE JOB = 'CLERK';
-
-    SALARY
-----------
-      4150
-
-SQL> SELECT * FROM EMP;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-14 rows selected.
-
-SQL> SELECT DISTINCT JOB FROM EMP;
-
-JOB
----------
-CLERK
-SALESMAN
-ANALYST
-MANAGER
-PRESIDENT
-
-SQL> SELECT COUNT(JOB) FROM EMP WHERE JOB = 'CLERK';
-
-COUNT(JOB)
-----------
-         4
-
-SQL> SELECT JOB,COUNT(JOB) FROM EMP WHERE JOB = 'CLERK';
-SELECT JOB,COUNT(JOB) FROM EMP WHERE JOB = 'CLERK'
-       *
-ERROR at line 1:
-ORA-00937: not a single-group group function
-
-
-SQL> SELECT JOB,COUNT(JOB) FROM EMP GROUP BY JOB;
-
-JOB       COUNT(JOB)
---------- ----------
-CLERK              4
-SALESMAN           4
-ANALYST            2
-MANAGER            3
-PRESIDENT          1
-
-SQL> SELECT JOB,SUM(JOB) FROM EMP GROUP BY JOB;
-SELECT JOB,SUM(JOB) FROM EMP GROUP BY JOB
-               *
-ERROR at line 1:
-ORA-01722: invalid number
-
-
-SQL> SELECT JOB,SUM(SAL) FROM EMP GROUP BY JOB;
-
-JOB         SUM(SAL)
---------- ----------
-CLERK           4150
-SALESMAN        5600
-ANALYST         6000
-MANAGER         8275
-PRESIDENT       5000
-
-SQL> SELECT JOB,SUM(SAL) SALARY FROM EMP GROUP BY JOB;
-
-JOB           SALARY
---------- ----------
-CLERK           4150
-SALESMAN        5600
-ANALYST         6000
-MANAGER         8275
-PRESIDENT       5000
-
-SQL> SELECT * FROM EMP;
-
-     EMPNO ENAME      JOB              MGR HIREDATE         SAL       COMM     DEPTNO
----------- ---------- --------- ---------- --------- ---------- ---------- ----------
-      7369 SMITH      CLERK           7902 17-DEC-80        800                    20
-      7499 ALLEN      SALESMAN        7698 20-FEB-81       1600        300         30
-      7521 WARD       SALESMAN        7698 22-FEB-81       1250        500         30
-      7566 JONES      MANAGER         7839 02-APR-81       2975                    20
-      7654 MARTIN     SALESMAN        7698 28-SEP-81       1250       1400         30
-      7698 BLAKE      MANAGER         7839 01-MAY-81       2850                    30
-      7782 CLARK      MANAGER         7839 09-JUN-81       2450                    10
-      7788 SCOTT      ANALYST         7566 19-APR-87       3000                    20
-      7839 KING       PRESIDENT            17-NOV-81       5000                    10
-      7844 TURNER     SALESMAN        7698 08-SEP-81       1500          0         30
-      7876 ADAMS      CLERK           7788 23-MAY-87       1100                    20
-      7900 JAMES      CLERK           7698 03-DEC-81        950                    30
-      7902 FORD       ANALYST         7566 03-DEC-81       3000                    20
-      7934 MILLER     CLERK           7782 23-JAN-82       1300                    10
-
-14 rows selected.
-
-SQL> SELECT DISTINCT JOB FROM EMP;
-
-JOB
----------
-CLERK
-SALESMAN
-ANALYST
-MANAGER
-PRESIDENT
-
-SQL> SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB;
-
-JOB       COUNT(JOB)
---------- ----------
-CLERK              4
-SALESMAN           4
-ANALYST            2
-MANAGER            3
-PRESIDENT          1
-
-SQL> SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB HAVING SUM(JOB) > 1;
-SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB HAVING SUM(JOB) > 1
-                                                         *
-ERROR at line 1:
-ORA-01722: invalid number
-
-
-SQL> SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB HAVING SALARY >= 800;
-SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB HAVING SALARY >= 800
-                                                     *
-ERROR at line 1:
-ORA-00904: "SALARY": invalid identifier
-
-
-SQL> SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB HAVING SAL >= 800;
-SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB HAVING SAL >= 800
-                                                     *
-ERROR at line 1:
-ORA-00979: not a GROUP BY expression
-
-
-SQL> SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB HAVING JOB = 'CLERK';
-
-JOB       COUNT(JOB)
---------- ----------
-CLERK              4
-
-SQL> SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB HAVING JOB IN ( 'CLERK' ,'SALESMAN');
-
-JOB       COUNT(JOB)
---------- ----------
-CLERK              4
-SALESMAN           4
-
-SQL> SELECT JOB , COUNT(JOB) FROM EMP GROUP BY JOB HAVING SUM(SAL) > 5000;
-
-JOB       COUNT(JOB)
---------- ----------
-SALESMAN           4
-ANALYST            2
-MANAGER            3
-
-SQL> SELECT JOB , COUNT(JOB) , SUM(SAL) FROM EMP GROUP BY JOB HAVING SUM(SAL) > 5000;
-
-JOB       COUNT(JOB)   SUM(SAL)
---------- ---------- ----------
-SALESMAN           4       5600
-ANALYST            2       6000
-MANAGER            3       8275
-
-SQL> SELECT JOB , COUNT(JOB) , SUM(SAL) FROM EMP GROUP BY JOB HAVING SUM(SAL) < 5000;
-
-JOB       COUNT(JOB)   SUM(SAL)
---------- ---------- ----------
-CLERK              4       4150
-
-SQL> SELECT JOB , COUNT(JOB) , SUM(SAL) FROM EMP GROUP BY JOB HAVING SUM(SAL) < 5000 AND JOB IN ('SALESMAN','MANAGER');
-
-no rows selected
-
-SQL> SELECT JOB , COUNT(JOB) , SUM(SAL) FROM EMP GROUP BY JOB HAVING SUM(SAL) < 5000 AND COUNT(JOB) > 1 ;
-
-JOB       COUNT(JOB)   SUM(SAL)
---------- ---------- ----------
-CLERK              4       4150
-
-SQL> SELECT JOB , COUNT(JOB) , SUM(SAL) FROM EMP GROUP BY JOB HAVING SUM(SAL) > 5000 AND COUNT(JOB) > 1 ;
-
-JOB       COUNT(JOB)   SUM(SAL)
---------- ---------- ----------
-SALESMAN           4       5600
-ANALYST            2       6000
-MANAGER            3       8275
-
-SQL> SELECT JOB , COUNT(JOB) , SUM(SAL) FROM EMP GROUP BY JOB HAVING SUM(SAL) > 5000 AND COUNT(JOB) > 2 ;
-
-JOB       COUNT(JOB)   SUM(SAL)
---------- ---------- ----------
-SALESMAN           4       5600
-MANAGER            3       8275
-
-SQL> SELECT JOB , COUNT(JOB) , SUM(SAL) FROM EMP GROUP BY JOB HAVING SUM(SAL) > 5000 AND COUNT(JOB) > 1 ;
-
-JOB       COUNT(JOB)   SUM(SAL)
---------- ---------- ----------
-SALESMAN           4       5600
-ANALYST            2       6000
-MANAGER            3       8275
-
-SQL> SELECT JOB , COUNT(JOB) , SUM(SAL) FROM EMP GROUP BY JOB HAVING SUM(SAL) > 5000 AND COUNT(JOB) > 1 ORDER BY JOB;
-
-JOB       COUNT(JOB)   SUM(SAL)
---------- ---------- ----------
-ANALYST            2       6000
-MANAGER            3       8275
-SALESMAN           4       5600
-
-SQL> SELECT JOB , COUNT(JOB) COUNT , SUM(SAL) SALARY FROM EMP GROUP BY JOB HAVING SUM(SAL) > 5000 AND COUNT(JOB) > 1 ORDER BY SALARY;
-
-JOB            COUNT     SALARY
---------- ---------- ----------
-SALESMAN           4       5600
-ANALYST            2       6000
-MANAGER            3       8275
-
-SQL> SELECT JOB , COUNT(JOB) COUNT , SUM(SAL) SALARY FROM EMP GROUP BY JOB HAVING SUM(SAL) > 5000 AND COUNT(JOB) > 1 ORDER BY COUNT;
-
-JOB            COUNT     SALARY
---------- ---------- ----------
-ANALYST            2       6000
-MANAGER            3       8275
-SALESMAN           4       5600
-
-SQL>
-
-
-
-
-
-
-
-
-
-
-
-
+Oracle right join
+SELECT
+    a.id id_a,
+    a.color color_a,
+    b.id id_b,
+    b.color color_b
+FROM
+    palette_a a
+RIGHT JOIN palette_b b ON a.color = b.color;			
+
+Oracle full outer join
+
+SELECT
+    a.id id_a,
+    a.color color_a,
+    b.id id_b,
+    b.color color_b
+FROM
+    palette_a a
+FULL OUTER JOIN palette_b b ON a.color = b.color;	
+
+SELF JOIN
+CREATE TABLE employees( 
+	employee_id          number(10)      not null,
+    last_name            varchar2(50)      not null,
+    email                varchar2(30),
+    hire_date            date,
+    job_id               varchar2(30),
+    department_id        number(10),
+    salary               number(6),
+    manager_id           number(6)
+);
+
+insert into employees( employee_id, last_name, email, hire_date, job_id, salary,department_id ,manager_id)
+                values ( 1001, 'Lawson', 'lawson@g.com', '01-JAN-2002','MGR', 30000,1 ,1004);
+
+insert into employees( employee_id, last_name, email, hire_date, job_id, salary, department_id ,manager_id)
+                values ( 1002, 'Wells', 'wells@g.com', '01-JAN-2002', 'DBA', 20000,2, 1005 );
+
+insert into employees( employee_id, last_name, email, hire_date, job_id, salary, department_id ,manager_id)
+                 values( 1003, 'Bliss', 'bliss@g.com', '01-JAN-2002', 'PROG', 24000,3 ,1004);
+
+insert into employees( employee_id, last_name, email, hire_date, job_id, salary, department_id, manager_id)
+                   values( 1004,  'Kyte', 'tkyte@a.com', SYSDATE-3650, 'MGR',25000 ,4, 1005);
+
+insert into employees( employee_id, last_name, email, hire_date, job_id, salary, department_id, manager_id)
+                   values( 1005, 'Viper', 'sdillon@a .com', SYSDATE, 'PROG', 20000, 1, 1006);
+
+insert into employees( employee_id, last_name, email, hire_date, job_id, salary, department_id,manager_id)
+                   values( 1006, 'Beck', 'clbeck@g.com', SYSDATE, 'PROG', 20000, 2, null);
+
+insert into employees( employee_id, last_name, email, hire_date, job_id, salary, department_id, manager_id)
+                   values( 1007, 'Java', 'java01@g.com', SYSDATE, 'PROG', 20000, 3, 1006);
+insert into employees( employee_id, last_name, email, hire_date, job_id, salary, department_id, manager_id)
+                   values( 1008, 'Oracle', 'wvelasq@g.com', SYSDATE, 'DBA', 20000, 4, 1006);
+
+select * from employees;
+
+select e1.last_name "Employee" , e2.last_name "Reports To" 
+from employees e1 left outer join employees e2
+on e1.manager_id = e2.employee_id;
+
+INDEX
+
+SELECT 
+    index_name, 
+    index_type, 
+    visibility, 
+    status 
+FROM 
+    all_indexes
+WHERE 
+    table_name = 'MEMBERS';
+	
+The following statement finds members whose last name is Harse:
+
+SELECT member_id,first_name,last_name FROM members
+WHERE last_name = 'Harse';
+
+First, add the EXPLAIN PLAN FOR clause immediately before the SQL statement:
+
+EXPLAIN PLAN FOR
+SELECT member_id,first_name,last_name FROM members
+WHERE last_name = 'Harse';	
+
+SELECT 
+    PLAN_TABLE_OUTPUT 
+FROM 
+    TABLE(DBMS_XPLAN.DISPLAY());
+
+
+Creating an index on one column example
+
+CREATE INDEX members_last_name_i 
+ON members(last_name);
+
+Now, showing the indexes again, you will find that the members table has two indexes:
+SELECT 
+    index_name, 
+    index_type, 
+    visibility, 
+    status 
+FROM 
+    all_indexes
+WHERE 
+    table_name = 'MEMBERS';
+
+Removing an index
+DROP INDEX members_last_name_i;
 
