@@ -1,0 +1,69 @@
+Create Two Classes 
+	1. Employee - pojo
+		employeeId
+		name
+		salary
+		
+	2. EmployeeCollectionUtil
+	
+		List<Employee> employeeList = new ArrayList<Employee>();
+		
+		-public boolean addNewEmployee(Employee employee)
+		public boolean addAllEmployees(Employee[] employee)
+		public boolean updateEmployeeSalary(int employeeId ,  double newSalary)
+		public boolean deleteEmployee(int employeeId)
+		public Employee getEmployeeByEmployeeId(int employeeId)
+		-public List<Employee> getAllEmployees()
+		
+	3. Main - OUTPUT
+	No Books present
+
+	if there are Employees in list
+		EmployeeId				Name			Salary
+		<bookid>				<name>			<Salary>	
+	
+	Menu
+	1. Add Single Employee
+	2. Add Multiple Employees
+	3. Update Existing Employee Salary
+	4. Delete Existing Employee
+	5. Print Single Employee Details
+	6. Exit
+	
+	Enter your choice
+	<employeeChoice>
+	
+	if employeeChoice == 1
+		accept employeeId , name , salary and store in variable 
+		and call addNewEmployee(Employee employee) method.
+	if employeeChoice == 2
+		How many Employees do you want to add ?
+		<numberOfEmployees>
+		accept employeeId , name , salary for each employee store in variable/object/array 
+		and call public boolean addAllEmployees(Employee[] employee) method.
+	if employeeChoice == 3
+		Accept employeeId from user
+		<employeeId>
+		validate employeeId if user enter valid employee id 
+			enter New Salary
+			<newSalary>
+			and call public boolean updateEmployeeSalary(int employeeId ,  double newSalary) method.
+		in case of invalid employee id print "Employee not found !! Invalid  employeeId "	
+	if employeeChoice == 4
+		Accept employeeId from user
+		<employeeId>
+		validate employeeId if user enter valid employee id 
+		and call public boolean deleteEmployee(int employeeId) to delete employee.
+		in case of invalid employee id print "Employee not found !! Invalid Employee Id "
+	if employeeChoice == 5
+		Accept employeeId from user
+		<employeeId>
+		validate employeeId if user enter valid employee id 
+		and call public Employee getEmployeeByEmployeeId(int employeeId) and print employee details
+	if employeeChoice == 6
+		Print Thank you !!
+		
+	Do you want to continue yes - no ?
+	if	yes 
+		1. Print all the employees details in table format as shown above
+		2. Print the menu 

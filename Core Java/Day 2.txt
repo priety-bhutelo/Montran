@@ -1,0 +1,28 @@
+Your account is opend successfully !!
+<Print account details>
+
+(note : depending on the account type we have to perform the transactions)
+Transaction Choice Menu
+1. Withdraw
+2. Deposit
+3. Print Balance
+
+Enter your transaction choice
+<transactionChoice>
+
+if transactionChoice is Withdraw accept the amount
+<amount>
+<Display the transaction status>
+
+if transactionChoice is Deposit accept the amount
+<amount>
+<Display the transaction status>
+
+if transactionChoice is Print Balance accept the amount
+<Display the account balance (in case of current account print both the balances mainbalance , overdraft balance)>
+
+Do you want to continue (yes-no)?
+<continueChoice>
+
+if continueChoice is yes print TransactionChoiceMenu and perfom the next transaction 
+if continueChoice is no print "Thank You For Banking With Us !!"

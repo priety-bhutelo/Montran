@@ -1,0 +1,13 @@
+Write a program to accept details of one employee.
+	section 1:
+	employeeId , name , salary
+	write the above accepted values in a file "employee.txt"
+	section 2:
+	read the employee.txt and print the details on console.
+	
+Note : Create classes for read and write operation. Use InputStream and OutputStream. 
+
+
+	
+	
+

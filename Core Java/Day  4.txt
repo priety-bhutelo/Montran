@@ -1,0 +1,71 @@
+Create Two Classes 
+	1. Book - pojo
+		bookid
+		name
+		price
+		
+	2. BookUtil
+	
+		Book [] books //size of this array will set by main while creating BookUtil object.
+		
+		public boolean addNewBook(Book book)
+		public boolean addAllBooks(Book[] books)
+		public boolean updateBook(int bookid , String newName , double newPrice)
+		public boolean deleteBook(int bookid)
+		public Book getBookByBookId(int bookid)
+		public Book[] getAllBooks()
+		
+	3. Main - OUTPUT
+	No Books present
+
+	if there are books in array 
+		BookID				Name			Price
+		<bookid>			<name>			<Price>	
+	
+	Menu
+	1. Add Single Book	
+	2. Add Multiple Books
+	3. Update Existing Book
+	4. Delete Existing Book
+	5. Print Single Book Details
+	6. Exit
+	
+	Enter your choice
+	<bookChoice>
+	
+	if bookChoice == 1
+		accept BookId , name , price and store in variable 
+		and call addNewBook(Book book) method.
+	if bookChoice == 2
+		How many books do you want to add ?
+		<numberOfBooks>
+		accept BookId , name , price for each book store in variable/object/array 
+		and call public boolean addAllBooks(Book[] books) method.
+	if bookChoice == 3
+		Accept BookId from user
+		<bookId>
+		validate bookId if user enter valid book id 
+			enter New Price
+			<newPrice>
+			enter new Name
+			<newName>
+			and call public boolean updateBook(int bookid , String newName , double newPrice) method.
+		in case of invalid book id print "BookId not found !! Invalid Book Id "	
+	if bookChoice == 4
+		Accept BookId from user
+		<bookId>
+		validate bookId if user enter valid book id 
+		and call public boolean deleteBook(int bookid) to delete book.
+		in case of invalid book id print "BookId not found !! Invalid Book Id "
+	if bookChoice == 5
+		Accept BookId from user
+		<bookId>
+		validate bookId if user enter valid book id 
+		and call public Book getBookByBookId(int bookid) and print book details
+	if bookChoice == 6
+		Print Thank you !!
+		
+	Do you want to continue yes - no ?
+	if	yes 
+		1. Print all the books details in table format as shown above
+		2. Print the menu 
