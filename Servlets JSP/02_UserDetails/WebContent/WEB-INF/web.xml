@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" id="WebApp_ID" version="2.5">
+  <display-name>02_UserDetails</display-name>
+  <welcome-file-list>
+    <welcome-file>UserDetails.html</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <description></description>
+    <display-name>UserDetailsServlet</display-name>
+    <servlet-name>UserDetailsServlet</servlet-name>
+    <servlet-class>com.montran.controller.UserDetailsServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>UserDetailsServlet</servlet-name>
+    <url-pattern>/UserDetailsServlet</url-pattern>
+  </servlet-mapping>
+  <servlet>
+    <description></description>
+    <display-name>AdditionServlet</display-name>
+    <servlet-name>AdditionServlet</servlet-name>
+    <servlet-class>com.montran.controller.AdditionServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AdditionServlet</servlet-name>
+    <url-pattern>/AdditionServlet</url-pattern>
+  </servlet-mapping>
+</web-app>
